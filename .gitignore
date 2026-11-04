@@ -1,0 +1,11 @@
+node_modules/
+.npm/
+*.log
+.env
+.env.*
+!.env.example
+secrets/
+**/api_key
+**/*api_key*
+.DS_Store
+prove/.tmp/

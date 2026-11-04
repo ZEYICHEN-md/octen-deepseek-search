@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "octen": {
+      "command": "npx",
+      "args": ["-y", "octen-mcp@0.7.1"],
+      "env": {
+        "OCTEN_API_KEY": "${OCTEN_API_KEY}"
+      }
+    },
+    "deepseek-web": {
+      "command": "npx",
+      "args": ["-y", "mcp-deepseek-search@1.0.1"],
+      "env": {
+        "DEEPSEEK_API_KEY": "${DEEPSEEK_API_KEY}"
+      }
+    }
+  }
+}

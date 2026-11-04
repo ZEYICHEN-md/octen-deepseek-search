@@ -1,0 +1,39 @@
+{
+  "name": "octen-deepseek-search",
+  "displayName": "Octen + DeepSeek Search",
+  "version": "1.0.0",
+  "description": "Live web search via Octen MCP (default: search, news, business, place, pulse, broad, extract, image; video beta). Mainland China / Chinese-web supplement via DeepSeek Search & Fetch when Octen or other tools lack CN sources. Includes routing skills for both.",
+  "author": {
+    "name": "ZEYI CHEN / tinkabot"
+  },
+  "license": "MIT",
+  "keywords": [
+    "octen",
+    "deepseek",
+    "search",
+    "china",
+    "chinese-web",
+    "news",
+    "extract",
+    "mcp",
+    "research"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "mcp.json",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "OCTEN_API_KEY": {
+        "type": "string",
+        "title": "Octen API key",
+        "description": "Secret API key from https://platform.octen.ai (or docs.octen.ai). Used only as ${OCTEN_API_KEY} in mcp.json; never commit the value."
+      },
+      "DEEPSEEK_API_KEY": {
+        "type": "string",
+        "title": "DeepSeek API key",
+        "description": "Secret API key from https://platform.deepseek.com. Used only as ${DEEPSEEK_API_KEY} in mcp.json; never commit the value."
+      }
+    },
+    "required": ["OCTEN_API_KEY", "DEEPSEEK_API_KEY"]
+  }
+}
