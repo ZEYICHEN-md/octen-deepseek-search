@@ -50,4 +50,10 @@ node prove/run-all.mjs
 
 - 用户机器上的 Kimi Code 桌面安装对话框。
 - 带真实密钥的 Octen 搜索、DeepSeek 搜索，以及 Exa `agent_run`。
-- 带斜杠分支的 codeload 下载是否返回 200。推送后单独核对。
+## 推送后的下载地址
+
+| URL | 结果 |
+| --- | --- |
+| `https://codeload.github.com/ZEYICHEN-md/octen-deepseek-search/zip/cursor/kimi-exa-octen-deepseek-d193` | HTTP 200，zip。这是加载器对分支 URL 实际请求的地址 |
+| `https://github.com/ZEYICHEN-md/octen-deepseek-search/archive/refs/heads/cursor/kimi-exa-octen-deepseek-d193.zip` | HTTP 200，zip。唯一顶层目录内含 `kimi.plugin.json` |
+| `https://codeload.github.com/ZEYICHEN-md/octen-deepseek-search/zip/03823034cc4a13f08362db65cebc9519c36b005c` | HTTP 200。这是提交 SHA 形式；文档提交之后 SHA 会变，安装请用分支地址 |

@@ -106,7 +106,7 @@ node prove/run-all.mjs
 - 没有在你的 Windows 桌面里点过安装对话框，不能把那一步说成已验证。
 - 没有 Octen / DeepSeek / Exa 的私有密钥，所以没有做带鉴权的搜索或 `agent_run`。
 - `agent_run` 在免密钥连接里不会出现。清单里故意不写 `bearerTokenEnvVar`：Kimi 在该变量为空时会直接拒绝连接，免密钥搜索会一起坏掉。需要 `agent_run` 时，用 Kimi 的 HTTP OAuth（文档中的 `/mcp-config login`；插件运行时服务器名是 `plugin-octen-deepseek-search:exa`）。本次没有完成 Exa 登录。
-- 官方加载器对带斜杠的分支，下载地址是 `https://codeload.github.com/ZEYICHEN-md/octen-deepseek-search/zip/cursor/kimi-exa-octen-deepseek-d193`（没有 `refs/heads`）。推送后要核对这个地址是否返回 200；若不是，对话框改贴上面的 archive zip。
+- 带斜杠的分支会被加载器下载为 `https://codeload.github.com/ZEYICHEN-md/octen-deepseek-search/zip/cursor/kimi-exa-octen-deepseek-d193`（没有 `refs/heads`）。2026-11-09 该地址返回 200，内容是 zip。上面的 archive zip 同样返回 200。
 
 ## 许可
 
