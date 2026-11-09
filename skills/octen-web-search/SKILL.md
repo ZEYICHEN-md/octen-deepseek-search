@@ -54,10 +54,12 @@ PlaceCard     = address, coordinates, phone, hours, rating, optional distance
 
 One natural-language question, max 500 chars. Resolve pronouns from conversation first. Do not pre-split for `broad_search`.
 
-## Namespace / id notes
+## Tool ids
 
-- **Grok Bot:** connector namespace `user-octen` (server name `octen`). Discover with GetDynamicTools, call with CallDynamicTool.
-- **Cursor IDE (this plugin):** MCP server id `octen` from `mcp.json`. Prefer short tool names above; if the client prefixes them, use the listed id.
+Use the id that is actually listed in the session.
+
+- **Kimi Code:** `mcp__plugin-octen-deepseek-search_octen__` plus the tool name, for example `mcp__plugin-octen-deepseek-search_octen__search`. The full table is in `search-router`.
+- **Cursor:** MCP server `octen`. Use the short names in the route table (`search`, `news_search`, and the rest).
 
 ## Recipes
 

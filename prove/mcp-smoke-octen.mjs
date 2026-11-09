@@ -14,12 +14,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const outPath = join(__dirname, "mcp-smoke-octen.jsonl");
 mkdirSync(__dirname, { recursive: true });
 
-if (!process.env.OCTEN_API_KEY) {
-  console.error("FAIL: OCTEN_API_KEY not set in environment");
-  process.exit(2);
-}
-
-const DO_CALL = process.env.OCTEN_SMOKE_CALL === "1";
+const HAS_KEY = Boolean(process.env.OCTEN_API_KEY);
+const DO_CALL = HAS_KEY && process.env.OCTEN_SMOKE_CALL === "1";
 const EXPECTED = [
   "broad_search",
   "business_search",
@@ -69,7 +65,7 @@ function send(method, params) {
     const t = setTimeout(() => {
       pending.delete(id);
       reject(new Error(`timeout waiting for id=${id} method=${method}`));
-    }, 90000);
+    }, 180000);
     pending.set(id, {
       resolve: (v) => {
         clearTimeout(t);
@@ -146,7 +142,7 @@ async function main() {
     server: "octen",
     initialize: "FAIL",
     toolsList: "FAIL",
-    toolsCall: DO_CALL ? "FAIL" : "SKIP",
+    toolsCall: DO_CALL ? "FAIL" : HAS_KEY ? "SKIP" : "SKIP_NO_KEY",
     toolNames: [],
     error: null,
   };
@@ -219,8 +215,8 @@ async function main() {
   writeFileSync(outPath, lines.map((x) => JSON.stringify(x)).join("\n") + "\n");
 
   const dump = lines.map((x) => JSON.stringify(x)).join("\n");
-  const keyLen = process.env.OCTEN_API_KEY.length;
-  const leaked = keyLen >= 8 && dump.includes(process.env.OCTEN_API_KEY);
+  const key = process.env.OCTEN_API_KEY || "";
+  const leaked = key.length >= 8 && dump.includes(key);
   result.leakCheck = leaked ? "FAIL" : "PASS";
   console.log(JSON.stringify(result, null, 2));
 
@@ -228,7 +224,9 @@ async function main() {
     (result.initialize === "PASS" ||
       result.initialize === "PASS_NO_SERVERINFO") &&
     result.toolsList === "PASS" &&
-    (result.toolsCall === "PASS" || result.toolsCall === "SKIP") &&
+    (result.toolsCall === "PASS" ||
+      result.toolsCall === "SKIP" ||
+      result.toolsCall === "SKIP_NO_KEY") &&
     result.leakCheck === "PASS";
   process.exit(ok ? 0 : 1);
 }

@@ -34,9 +34,11 @@ Two MCP tools (do **not** invent other tool names):
 1. `deepseek_search` — ranked web results from DeepSeek's own engine → `SearchHit[]`.
 2. `deepseek_fetch` — one URL → Markdown body (`FetchPage`) after search when a summary is not enough.
 
-### Namespace / id notes
-- **Grok Bot (this box):** connector namespace `user-deepseek-web` (server name `deepseek-web`). Discover with GetDynamicTools, call with CallDynamicTool.
-- **Cursor IDE (this plugin):** MCP server id is `deepseek-web` from `mcp.json`. Tool ids may appear plugin-prefixed depending on the client (e.g. under the plugin / server name). Prefer the short names `deepseek_search` / `deepseek_fetch` when listing tools; if the client prefixes them, use the listed id.
+### Tool ids
+Use the id that is actually listed in the session.
+
+- **Kimi Code:** `mcp__plugin-octen-deepseek-search_deepseek-web__deepseek_search` and `mcp__plugin-octen-deepseek-search_deepseek-web__deepseek_fetch`.
+- **Cursor:** MCP server `deepseek-web`, short names `deepseek_search` and `deepseek_fetch`.
 
 ## How to call search
 - Keep `query` ≤ 128 Unicode chars.

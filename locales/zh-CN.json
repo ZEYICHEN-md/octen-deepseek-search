@@ -1,0 +1,21 @@
+{
+  "displayName": "Octen + DeepSeek + Exa",
+  "shortDescription": "Exa 免密钥搜索、Octen 实时网页、DeepSeek 中文网页补充",
+  "longDescription": "安装后即可用 Exa 官方端点 https://mcp.exa.ai/mcp 做搜索和抓取。Octen 与 DeepSeek 使用官方 npm 包，密钥由本机 scripts/setup-secrets.mjs 写入用户目录。",
+  "developerName": "ZEYI CHEN / tinkabot",
+  "websiteURL": "https://github.com/ZEYICHEN-md/octen-deepseek-search",
+  "mcpOverrides": {
+    "exa": {
+      "displayName": "Exa",
+      "description": "官方托管 https://mcp.exa.ai/mcp。免密钥提供 web_search_exa 与 web_fetch_exa。"
+    },
+    "octen": {
+      "displayName": "Octen",
+      "description": "官方包 octen-mcp@0.7.1。需要本机 OCTEN_API_KEY。"
+    },
+    "deepseek-web": {
+      "displayName": "DeepSeek",
+      "description": "官方包 mcp-deepseek-search@1.0.1。需要本机 DEEPSEEK_API_KEY。"
+    }
+  }
+}
