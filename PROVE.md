@@ -52,8 +52,11 @@ node prove/run-all.mjs
 - 带真实密钥的 Octen 搜索、DeepSeek 搜索，以及 Exa `agent_run`。
 ## 推送后的下载地址
 
-| URL | 结果 |
+加载器安装 GitHub 分支时，先请求 `.../commits/<ref>.atom`，用其中的 `Grit::Commit/<sha>`，再下载 `https://codeload.github.com/<owner>/<repo>/zip/<sha>`。
+
+| 检查 | 结果 |
 | --- | --- |
-| `https://codeload.github.com/ZEYICHEN-md/octen-deepseek-search/zip/cursor/kimi-exa-octen-deepseek-d193` | HTTP 200，zip。这是加载器对分支 URL 实际请求的地址 |
-| `https://github.com/ZEYICHEN-md/octen-deepseek-search/archive/refs/heads/cursor/kimi-exa-octen-deepseek-d193.zip` | HTTP 200，zip。唯一顶层目录内含 `kimi.plugin.json` |
-| `https://codeload.github.com/ZEYICHEN-md/octen-deepseek-search/zip/03823034cc4a13f08362db65cebc9519c36b005c` | HTTP 200。这是提交 SHA 形式；文档提交之后 SHA 会变，安装请用分支地址 |
+| 分支 atom `.../commits/cursor/kimi-exa-octen-deepseek-d193.atom` | 解析到 `1bc58bb5519a44b52d8354cbd2ab9a2abfab306d`（记录该次核对时的尖端；之后的文档提交会前进） |
+| `.../zip/1bc58bb5519a44b52d8354cbd2ab9a2abfab306d` | HTTP 200。唯一顶层目录，内含 `kimi.plugin.json` |
+| archive zip `.../archive/refs/heads/cursor/kimi-exa-octen-deepseek-d193.zip` | HTTP 200。同样是单层目录加清单 |
+| `.../zip/cursor/kimi-exa-octen-deepseek-d193` | HTTP 200，但是加载器的备用地址。核对时内容曾停在更早的提交，安装不要改贴这条 |
