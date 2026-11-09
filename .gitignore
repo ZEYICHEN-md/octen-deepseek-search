@@ -9,3 +9,5 @@ secrets/
 **/*api_key*
 .DS_Store
 prove/.tmp/
+prove/*.jsonl
+dist/

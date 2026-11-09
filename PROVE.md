@@ -1,55 +1,62 @@
-# PROVE — octen-deepseek-search plugin (local)
+# PROVE — Kimi 清单与 Exa / Octen / DeepSeek
 
-Proven on the shared box. Times below are **Asia/Shanghai (CST, UTC+8)**.
+日期：2026-11-09。运行环境是 Linux，Node.js v22。使用的 Kimi 运行时是 npm 上的 `@moonshot-ai/kimi-code@2.5.2`（其中带有 `PluginManager`、`qualifyMcpToolName`、zip 根目录识别和 GitHub URL 解析）。对照阅读的上游源码是 `MoonshotAI/kimi-code` 提交 `97637e54a079cace2ba710b38ffb4ed85b232351`。
 
-Date: 2026-11-04 ~21:33 CST
+没有在用户的 Kimi Code 桌面里操作安装对话框。
 
-## What was proven
+## 结果
 
-| Step | Result | Notes |
-|------|--------|-------|
-| Cursor `.cursor-plugin/plugin.json` | **PASS** | kebab-case `name`: `octen-deepseek-search`; `displayName` Octen + DeepSeek Search; both `OCTEN_API_KEY` and `DEEPSEEK_API_KEY` required |
-| `mcp.json` dual servers | **PASS** | `octen` → `octen-mcp@0.7.1`; `deepseek-web` → `mcp-deepseek-search@1.0.1`; only `${VAR}` placeholders |
-| Octen MCP smoke: `initialize` | **PASS** | `serverInfo.name=octen-mcp`, `version=0.7.1` |
-| Octen MCP smoke: `tools/list` | **PASS** | 9 tools: `broad_search`, `business_search`, `extract`, `image_search`, `news_search`, `place_search`, `pulse_search`, `search`, `video_search` |
-| Octen MCP smoke: `tools/call` `search` | **SKIP** (local) | Account-level Octen smoke already passed earlier; re-run with `OCTEN_SMOKE_CALL=1`. Transcript: `prove/mcp-smoke-octen.jsonl` (LEAK_CHECK PASS) |
-| DeepSeek MCP smoke: `initialize` | **PASS** | `serverInfo.name=mcp-deepseek-search`, `version=1.0.1` |
-| DeepSeek MCP smoke: `tools/list` | **PASS** | `deepseek_fetch`, `deepseek_search` |
-| DeepSeek MCP smoke: `tools/call` `deepseek_search` | **PASS** | Query `MCP 协议 lang:zh`, `count=1`; real URL + scores. Transcript: `prove/mcp-smoke-deepseek.jsonl` (LEAK_CHECK PASS) |
-| Install path real directory | **PASS** | Copied (not symlinked) to `~/.cursor/plugins/local/octen-deepseek-search` |
-| Secret scan of tree | **PASS** | No keyfile contents or `.env` secrets in tracked files |
+| 步骤 | 结果 |
+| --- | --- |
+| `kimi.plugin.json` 被 PluginManager 从本地目录安装 | PASS，`state=ok`，diagnostics 为空 |
+| 插件根就在 zip 根上的 HTTPS zip | PASS |
+| 只有一个顶层目录的 zip（GitHub archive 的形状） | PASS，会落到含 `kimi.plugin.json` 的那一层 |
+| 分支 URL 解析 | PASS，ref = `cursor/kimi-exa-octen-deepseek-d193` |
+| archive zip URL 解析 | PASS，种类是 `zip-url`，不会被当成 GitHub 安装 |
+| 运行时服务器名 | `plugin-octen-deepseek-search:exa`、`:octen`、`:deepseek-web` |
+| Exa 是 HTTP，URL 为 `https://mcp.exa.ai/mcp` | PASS |
+| Octen / DeepSeek 的 command 是 `node`，参数指向 `./bin/run-stdio.mjs`，cwd 已设置 | PASS |
+| 运行时 env 只有 `KIMI_CODE_HOME` 与 `KIMI_PLUGIN_ROOT` 这类注入，没有 API key 字段 | PASS |
+| 四个 skill 都被发现，`sessionStart.skill` 为 `search-router`，locale `zh-CN` | PASS |
+| `qualifyMcpToolName` 与技能里的 id 一致，长度均小于 64 | PASS |
+| Exa 免密钥 initialize | PASS，`exa-search-server` 3.5.0 |
+| Exa tools/list | PASS，只有 `web_search_exa`、`web_fetch_exa`；没有 `agent_run` |
+| Exa `web_search_exa`（带 `query` 和 `objective`） | PASS，返回真实 URL |
+| Exa `web_fetch_exa` | PASS |
+| DeepSeek initialize / tools/list | PASS，`mcp-deepseek-search` 1.0.1，工具 `deepseek_search`、`deepseek_fetch` |
+| DeepSeek 搜索 | AUTH_REQUIRED。无密钥时工具返回 `DEEPSEEK_API_KEY is not set`。没有可用的私有密钥，未做成功搜索 |
+| Octen initialize / tools/list | PASS，`octen-mcp` 0.7.1，九个工具与原先一致 |
+| Octen 搜索 | SKIP_NO_KEY。没有私有密钥，未调用 `search` |
+| `bin/run-stdio.mjs` 用临时假密钥拉起两个官方包并完成 initialize | PASS。假密钥未出现在输出里 |
+| 缺少密钥时启动脚本退出码 2，并指出变量名 | PASS |
+| `setup-secrets.mjs --from-env` 写入用户目录外的临时文件，模式 0600，标准输出不含密钥；指向仓库内的路径被拒绝 | PASS |
+| 仓库密钥扫描 | PASS |
+| npm 版本 | `octen-mcp@0.7.1`、`mcp-deepseek-search@1.0.1` 为 2026-11-09 登记的最新版 |
 
-## Paths
+重跑：
 
-| Role | Absolute path |
-|------|----------------|
-| Plugin git repo | `/workspace/octen-deepseek-search/` |
-| Local Cursor install (real dir) | `/home/box/.cursor/plugins/local/octen-deepseek-search/` |
-| Octen smoke | `prove/mcp-smoke-octen.mjs` → `prove/mcp-smoke-octen.jsonl` |
-| DeepSeek smoke | `prove/mcp-smoke-deepseek.mjs` → `prove/mcp-smoke-deepseek.jsonl` |
-| Keyfiles (never committed) | `~/.config/octen/api_key`, `~/.config/deepseek/api_key` |
-| Source trees merged from | `/workspace/octen-search-plugin/`, `/workspace/deepseek-china-search-plugin/` |
-
-## Important runtime note
-
-**Grok Bot does not load `~/.cursor/plugins/local`.** Local prove matters for Cursor IDE. On this box live runtimes remain connectors `user-octen` and `user-deepseek-web`.
-
-## How to re-run smoke
-
-```bash
-export OCTEN_API_KEY="$(cat ~/.config/octen/api_key)"
-export DEEPSEEK_API_KEY="$(cat ~/.config/deepseek/api_key)"
-cd /workspace/octen-deepseek-search
-node prove/mcp-smoke-octen.mjs
-# optional: OCTEN_SMOKE_CALL=1 node prove/mcp-smoke-octen.mjs
-node prove/mcp-smoke-deepseek.mjs
-unset OCTEN_API_KEY DEEPSEEK_API_KEY
+```text
+node prove/run-all.mjs
 ```
 
-## Opening a PR / remote
+## 加载器里和安装有关的事实
 
-skip — no remote requested (parent may push later)
+- 清单路径：`kimi.plugin.json` 优先于 `.kimi-plugin/plugin.json`。
+- stdio 的 `command` 只能是 PATH 上的命令，或以 `./` 开头且留在插件目录内。`npx` 在 Windows 上是 `.cmd`，当前 v2 `HostProcessService.spawn` 不经过 shell，直接 spawn 会 ENOENT。因此 Kimi 清单使用 `command: "node"`，由 `bin/run-stdio.mjs` 再启动 `npx`；Windows 分支使用 `cmd.exe /d /s /c`。这条 Windows 分支没有在 Windows 上跑过。
+- HTTP 的 `bearerTokenEnvVar` 会读环境变量并设置 `Authorization: Bearer`。变量为空时连接直接失败。Exa 与 Octen 的官方鉴权头是 `x-api-key`，不是 Bearer。Exa 免密钥不需要这个字段。
+- 插件 MCP 不会展开 `${OCTEN_API_KEY}` 这种占位符。Cursor 的 `mcp.json` 仍保留占位符，供 Cursor 自己的变量系统使用。
 
-## Design reminder
+## 未验证
 
-Thin wrap of `octen-mcp@0.7.1` + `mcp-deepseek-search@1.0.1`; Octen is default live web; DeepSeek is CN/Chinese-web supplement via skill routing.
+- 用户机器上的 Kimi Code 桌面安装对话框。
+- 带真实密钥的 Octen 搜索、DeepSeek 搜索，以及 Exa `agent_run`。
+## 推送后的下载地址
+
+加载器安装 GitHub 分支时，先请求 `.../commits/<ref>.atom`，用其中的 `Grit::Commit/<sha>`，再下载 `https://codeload.github.com/<owner>/<repo>/zip/<sha>`。
+
+| 检查 | 结果 |
+| --- | --- |
+| 分支 atom `.../commits/cursor/kimi-exa-octen-deepseek-d193.atom` | 解析到 `1bc58bb5519a44b52d8354cbd2ab9a2abfab306d`（记录该次核对时的尖端；之后的文档提交会前进） |
+| `.../zip/1bc58bb5519a44b52d8354cbd2ab9a2abfab306d` | HTTP 200。唯一顶层目录，内含 `kimi.plugin.json` |
+| archive zip `.../archive/refs/heads/cursor/kimi-exa-octen-deepseek-d193.zip` | HTTP 200。同样是单层目录加清单 |
+| `.../zip/cursor/kimi-exa-octen-deepseek-d193` | HTTP 200，但是加载器的备用地址。核对时内容曾停在更早的提交，安装不要改贴这条 |

@@ -1,8 +1,8 @@
 {
   "name": "octen-deepseek-search",
   "displayName": "Octen + DeepSeek Search",
-  "version": "1.0.0",
-  "description": "Live web search via Octen MCP (default: search, news, business, place, pulse, broad, extract, image; video beta). Mainland China / Chinese-web supplement via DeepSeek Search & Fetch when Octen or other tools lack CN sources. Includes routing skills for both.",
+  "version": "1.1.0",
+  "description": "Live web search via Octen MCP (default when a key is set: search, news, business, place, pulse, broad, extract, image; video beta). Exa official hosted MCP at https://mcp.exa.ai/mcp for keyless web_search_exa and web_fetch_exa. Mainland China / Chinese-web supplement via DeepSeek Search & Fetch. Kimi Code loads kimi.plugin.json; Cursor loads this file.",
   "author": {
     "name": "ZEYI CHEN / tinkabot"
   },
@@ -15,6 +15,7 @@
     "chinese-web",
     "news",
     "extract",
+    "exa",
     "mcp",
     "research"
   ],
